@@ -1,0 +1,8 @@
+
+*.zip
+*.json
+*.hpp
+*.c
+*.asv
+progs/*/
+*.mat
