@@ -43,11 +43,11 @@ file_names = {json_files.name};
 %   - 3 - string
 
 info = {
-    'Turtle JSON'       'json.load'         1   %my code
-    'Matlab''s jsondecode' 'jsondecode'        3   %'builtin'
-    'CP''s Matlab-JSON' 'fromjson'          3   %c_panton
-    'C++ JSON IO'       'json_read'         1   %c_json_io
-    'JSONLab'           'loadjson'          1   %JSONLab
+    'Turtle JSON'       'json.load'         1   'turtle_json' %my code
+    'Matlab''s jsondecode' 'jsondecode'     3   'Matlab'    %'builtin'
+    'CP''s Matlab-JSON' 'fromjson'          3   'CPs_matlab_json' %c_panton
+    'C++ JSON IO'       'json_read'         1   'cpp_json_io' %c_json_io
+    'JSONLab'           'loadjson'          1   'jsonlab' %JSONLab
     };
 
 n_progs = size(info,1);
@@ -62,6 +62,10 @@ for i = 1:n_progs
     end
     
 end
+
+safe_prog_names = info(:,4);
+
+%TODO: Exist flag not respected ''''
 
 n_files = length(json_files);
 n_progs = size(info,1);
@@ -102,6 +106,21 @@ for rep = 1:N_REPS_MAX
             h_tic = tic;
             data = fh(fh2(cur_file_path));
             run_time = toc(h_tic);
+            N = 0;
+            if run_time < 0.01
+                N = 200;
+            elseif run_time < 0.1
+                N = 20;
+            end
+            if N ~= 0
+                h_tic = tic;
+                for k = 1:N
+                    data = fh(fh2(cur_file_path));
+                end
+                run_time = toc(h_tic)/N;
+            end
+                
+            
             fprintf(' time: %0.3f\n',run_time);
             times(j,i,rep) = run_time;
             
@@ -111,7 +130,7 @@ for rep = 1:N_REPS_MAX
     end
 end
 
-save('wtf.mat','times','info','MAX_REP_PER_TIME')
+save('wtf.mat','times','info','MAX_REP_PER_TIME','file_names')
 
 keyboard
 
@@ -119,6 +138,38 @@ avg_times1 = nanmean(times,3);
 %Ignore the first rep
 avg_times2 = nanmean(times(:,:,2:end),3);
 avg_times = min(avg_times1,avg_times2);
+
+c_data = cell(n_files+1,n_progs*2);
+c_data(2:end,2:2:end) = num2cell(avg_times');
+c_data(2:end,3:2:end) = num2cell(bsxfun(@rdivide,avg_times(2:end,:),avg_times(1,:))');
+c_data(2:end,1) = file_names;
+
+
+c = num2cell(avg_times,2);
+c2 = cellfun(@(x) num2cell(x)',c,'un',0);
+T = table(file_names',c2{:});
+T.Properties.VariableNames = [{'file_names'};safe_prog_names];
+
+%Save to html
+
+% fid = fopen('times.html','w');
+% 
+% 
+% fclose(fid);
+%
+
+
+% <table class="table table-bordered table-hover table-condensed">
+% <thead><tr><th title="Field #1">Test</th>
+% <th title="Field #2">Test1</th>
+% <th title="Field #3">Test2</th>
+% </tr></thead>
+% <tbody><tr>
+% <td align="right">2</td>
+% <td align="right">3</td>
+% <td align="right">4</td>
+% </tr>
+% </tbody></table>
 
 tj_times = avg_times(1,:);
 x0 = log10(tj_times);
