@@ -140,8 +140,15 @@ avg_times2 = nanmean(times(:,:,2:end),3);
 avg_times = min(avg_times1,avg_times2);
 
 c_data = cell(n_files+1,n_progs*2);
-c_data(2:end,2:2:end) = num2cell(avg_times');
-c_data(2:end,3:2:end) = num2cell(bsxfun(@rdivide,avg_times(2:end,:),avg_times(1,:))');
+temp = num2cell(avg_times');
+c_data(2:end,2) = temp(:,1);
+c_data(2:end,3:2:end) = temp(:,2:end);
+ 
+%1 - names
+%2 - TJ
+%3 - Matlab
+%4 - ratios
+c_data(2:end,4:2:end) = num2cell(bsxfun(@rdivide,avg_times(2:end,:),avg_times(1,:))');
 c_data(2:end,1) = file_names;
 
 
@@ -211,7 +218,7 @@ end
 hold off
 set(gca,'xlim',[0.5 n_progs+0.5],'xtick',1:n_progs,'xticklabels',info(2:end,1),'FontSize',18,'XTickLabelRotation',30)
 set(gca,'ylim',[0.1 5000],'ytick',10.^(-1:4),'YTickLabel',{'0.1','1','10','100','1000','10000'})
-
+ylabel('normalized parse time');
 
 %??? Speedup vs execution time of Turtle JSON
 
