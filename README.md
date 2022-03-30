@@ -28,6 +28,7 @@ Currently a lot of manual setup is needed (~5 minutes).
     * Unzip files
     * Navitage to bin folder and unzip "windows precompiled"
     * Move files into subfolder of progs e.g. "\progs\matlab-json-master\fromjson.mexw64"
+    * on mac - brew install json-c then run make script
 3. Download JSONLab
     * Navigate to https://github.com/fangq/jsonlab
     * Download zip to progs folder
