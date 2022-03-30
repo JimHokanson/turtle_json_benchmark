@@ -34,6 +34,7 @@ Currently a lot of manual setup is needed (~5 minutes).
     * Download zip to progs folder
     * Unzip files
 4. Download C++ JSON IO
+    * For windows I've provided a binary so no need to follow the steps belows
     * Navigate to https://www.mathworks.com/matlabcentral/fileexchange/59166-c-json-io
     * Download zip to progs folder
     * Go to: https://raw.githubusercontent.com/nlohmann/json/develop/single_include/nlohmann/json.hpp
@@ -44,8 +45,7 @@ Currently a lot of manual setup is needed (~5 minutes).
 
 ```
 %For example I have:
-addpath('G:\repos\matlab_git\turtle_json_benchmark\progs\matlab-json-master')
-addpath('G:\repos\matlab_git\turtle_json_benchmark\progs\c  _json_io\c++_json_io')
+addpath('G:\repos\matlab_git\turtle_json_benchmark\progs')
 addpath('G:\repos\matlab_git\turtle_json_benchmark\progs\jsonlab-master\jsonlab-master')
 %I also already have Turtle JSON on the path
 ```
