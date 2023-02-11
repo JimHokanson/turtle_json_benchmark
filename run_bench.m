@@ -1,7 +1,7 @@
 function run_bench
 
 % DIR_NAMES = {'c  _json_io','c_panton','jsonlab'};
-N_REPS_MAX = 8;
+N_REPS_MAX = 1;
 
 %If we exceed this time for a single rep, just do one
 MAX_REP_PER_TIME = 60;
@@ -50,6 +50,14 @@ info = {
     'JSONLab'           'loadjson'          1   'jsonlab' %JSONLab
     };
 
+
+info = {
+    'Turtle JSON'       'json.load'         1   'turtle_json' %my code
+    'Matlab''s jsondecode' 'jsondecode'     3   'Matlab'    %'builtin'
+    'CP''s Matlab-JSON' 'fromjson'          3   'CPs_matlab_json' %c_panton
+    'C++ JSON IO'       'json_read'         1   'cpp_json_io' %c_json_io
+    };
+
 n_progs = size(info,1);
 
 exist_flags = true(1,n_progs);
@@ -75,6 +83,7 @@ for rep = 1:N_REPS_MAX
     for i = 1:n_files
         temp = json_files(i);
         cur_file_path = fullfile(temp.folder,temp.name);
+        fprintf('File: %s\n',temp.name);
         for j = 1:n_progs
             prog_name = info{j,1};
             if strcmp(prog_name,'JSONLab') && (...
@@ -86,7 +95,7 @@ for rep = 1:N_REPS_MAX
             if rep == 2 && times(j,i,1) > MAX_REP_PER_TIME
                 continue
             end
-            fprintf('Running %s on %s, Iteration %d ...',prog_name,temp.name,rep)
+            fprintf('   %s, Iteration %d ...',prog_name,rep)
             fh_str = info{j,2};
             fh = str2func(fh_str);
             switch info{j,3}
@@ -210,9 +219,9 @@ for i = 1:n_progs
    end
 end
 I = find(strcmp(file_names,'XJ30_NaCl500mM4uL6h_10m45x10s40s_Ea.json'));
-x1 = (1:4)+y0(I);
+x1 = (1:n_progs)+y0(I);
 co = get(gca,'ColorOrder');
-for i = 1:4
+for i = 1:n_progs
 semilogy(x1(i),norm_times(i,I),'o','MarkerEdgeColor',co(i,:),...
     'MarkerSize',16,'MarkerFaceColor',co(i,:));
 end
