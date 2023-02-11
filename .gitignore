@@ -6,3 +6,4 @@
 *.asv
 progs/*/
 *.mat
+*.DS_Store
